@@ -3,7 +3,7 @@ from typing import Literal
 
 
 @dataclass(frozen=True)
-class CDataDescribe:
+class CDataDescriptor:
     db_name: str
     table_name: str
     codes: list[str]
