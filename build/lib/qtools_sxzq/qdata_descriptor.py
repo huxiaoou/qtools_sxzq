@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, NoReturn
 
 
-@dataclass(frozen=True)
+@dataclass
 class CDataDescriptor:
     db_name: str
     table_name: str
@@ -16,7 +16,10 @@ class CDataDescriptor:
             self.db_name,
             self.table_name,
             self.codes,
-            ".".join(self.fields),
+            ",".join(self.fields),
             self.lag,
             self.data_view_type
         ]
+
+    def set_lag(self, lag: int) -> NoReturn:
+        self.lag = lag
