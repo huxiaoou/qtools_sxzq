@@ -1,26 +1,79 @@
-# Description
-
-This project is designed to provide some highly frequently used tools in daily quantitative trading works.
+# 项目简介
 
 ---
 
-### Old pip version
+## 安装方式
 
-```powershell
-python setup.py build
-python setup.py sdist
-pip install .\dist\qtools_sxzq-1.0.0.tar.gz
+```bash
+chmod +x ./install.sh
+./install.sh
 ```
 
-### New pip version
+## 模块介绍
 
-```powershell
-python setup.py sdist bdist_wheel
-pip install .\dist\qtools_sxzq-1.0.0-py3-none-any.whl
+### qdata
+
+
+
+### qwidgets
+
+使用SFG等函数使在终端中输出颜色字体
+
+```python
+from qtools_sxzq.qwidgets import SFG
+
+print(f"This output is normal, {SFG('but his output is green')}")
 ```
 
-## Module Description
+### utility.view_tqdb
 
-### qdata_descriptor
+使用view_tqdb在终端中快速查看数据库.
 
-provide some interface class to manage database used by transmatrix.
+#### 查看使用帮助 
+
+```bash
+ python -m qtools_sxzq.utility.view_tqdb -h
+```
+
+输出
+```bash
+usage: view_tqdb.py [-h] --lib LIB --table TABLE [--vars VARS] [--where WHERE] [--head HEAD] [--tail TAIL] [--maxrows MAXROWS]
+
+A python script to view trans-quant database
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --lib LIB          path for trans-quant database, like 'huxiaoou_private' or 'meta_data'
+  --table TABLE      table name in the database, like 'table_avlb' or 'future_bar_1day'
+  --vars VARS        variables to fetch, separated by ',' like "open,high,low,close", if not provided then fetch all.
+  --where WHERE      conditions to filter, sql expressions like "code = 'A9999_DCE'" AND datetime >= '2024-10-01 09:00:00'
+  --head HEAD        integer, head lines to print
+  --tail TAIL        integer, tail lines to print
+  --maxrows MAXROWS  integer, provide larger value to see more rows when print outcomes
+```
+
+#### 查看数据库`meta_data`中的表`future_bar_1day`
+
+```bash
+python -m qtools_sxzq.utility.view_tqdb --lib meta_data --table future_bar_1day --vars 'code,trade_day,`open`,high,low,`close`'
+```
+
+输出结果
+
+```bash
+SELECT code,trade_day,`open`,high,low,`close` FROM future_bar_1day:
+             code   trade_day         open         high          low        close
+0       A2005_DCE  2020-01-02  2522.345237  2535.427940  2516.458020  2525.615913
+1       A2005_DCE  2020-01-03  2525.615913  2546.548238  2524.961778  2536.082076
+2       A2005_DCE  2020-01-06  2533.465535  2558.322672  2527.578318  2557.014401
+3       A2005_DCE  2020-01-07  2560.939212  2579.254997  2555.051996  2561.593347
+4       A2005_DCE  2020-01-08  2561.593347  2593.645971  2555.706131  2586.450484
+...           ...         ...          ...          ...          ...          ...
+251716  Y2105_DCE  2021-04-02  5855.125676  5890.446620  5746.445849  5882.295633
+251717  Y2105_DCE  2021-04-06  5864.635161  6020.862412  5864.635161  5980.107477
+251718  Y2105_DCE  2021-04-07  6009.994429  6087.428806  5984.182970  6000.484944
+251719  Y2105_DCE  2021-04-08  6000.484944  6024.937906  5845.616191  5867.352157
+251720  Y2105_DCE  2021-04-09  5876.861641  5939.352542  5834.748208  5849.691685
+```
+
+注意,由于open和close两个价格和数据库中保留关键字重复,需要使用"`"键包围起来.
