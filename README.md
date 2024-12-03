@@ -15,11 +15,11 @@ chmod +x ./install.sh
 
 #### 类CDataDescriptor
 
-使用该类来提供描述一张表,方便在transmatrix中管理.
+使用该类来提供描述一张表,方便在transmatrix中管理使用.
 
 #### 函数save_df_to_db
 
-将一个pd.Dataframe 保存到指定表中.
+将一个pd.Dataframe保存到指定表中.
 
 ### qwidgets
 
@@ -33,17 +33,40 @@ from qtools_sxzq.qwidgets import SFG
 print(f"This output is normal, {SFG('but this output is green')}")
 ```
 
+### utility.ls_tqdb
+
+展示数据库中所有可用表.
+
+```bash
+python -m qtools_sxzq.utility.ls_tqdb --lib huxiaoou_private
+```
+
+### utility.rm_tqdb
+
+删除数据库中指定表
+
+```bash
+python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private --table name_of_table_to_remove
+```
+
+删除数据库中所有表
+
+```bash
+python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private -r
+```
+
 ### utility.view_tqdb
 
 使用view_tqdb在终端中快速查看数据库.
 
-#### 查看帮助 
+#### 查看帮助
 
 ```bash
  python -m qtools_sxzq.utility.view_tqdb -h
 ```
 
 输出
+
 ```bash
 usage: view_tqdb.py [-h] --lib LIB --table TABLE [--vars VARS] [--where WHERE] [--head HEAD] [--tail TAIL] [--maxrows MAXROWS]
 
