@@ -13,23 +13,31 @@ chmod +x ./install.sh
 
 ### qdata
 
+#### 类CDataDescriptor
 
+使用该类来提供描述一张表,方便在transmatrix中管理.
+
+#### 函数save_df_to_db
+
+将一个pd.Dataframe 保存到指定表中.
 
 ### qwidgets
 
-使用SFG等函数使在终端中输出颜色字体
+#### 终端输出渲染
+
+使用SFG/SFR等函数使在终端中输出颜色字体
 
 ```python
 from qtools_sxzq.qwidgets import SFG
 
-print(f"This output is normal, {SFG('but his output is green')}")
+print(f"This output is normal, {SFG('but this output is green')}")
 ```
 
 ### utility.view_tqdb
 
 使用view_tqdb在终端中快速查看数据库.
 
-#### 查看使用帮助 
+#### 查看帮助 
 
 ```bash
  python -m qtools_sxzq.utility.view_tqdb -h
@@ -76,4 +84,4 @@ SELECT code,trade_day,`open`,high,low,`close` FROM future_bar_1day:
 251720  Y2105_DCE  2021-04-09  5876.861641  5939.352542  5834.748208  5849.691685
 ```
 
-注意,由于open和close两个价格和数据库中保留关键字重复,需要使用"`"键包围起来.
+注意,由于`open`和`close`两个价格和数据库中保留关键字重复,需要使用"`"符号包围起来.
