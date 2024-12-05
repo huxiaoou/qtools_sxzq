@@ -2,6 +2,7 @@ README.md
 setup.py
 qtools_sxzq/__init__.py
 qtools_sxzq/qdata.py
+qtools_sxzq/qplot.py
 qtools_sxzq/qwidgets.py
 qtools_sxzq.egg-info/PKG-INFO
 qtools_sxzq.egg-info/SOURCES.txt
@@ -11,4 +12,5 @@ qtools_sxzq.egg-info/top_level.txt
 qtools_sxzq/utility/__init__.py
 qtools_sxzq/utility/ls_tqdb.py
 qtools_sxzq/utility/rm_tqdb.py
+qtools_sxzq/utility/view_colors.py
 qtools_sxzq/utility/view_tqdb.py

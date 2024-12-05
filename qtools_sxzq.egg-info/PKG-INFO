@@ -17,18 +17,21 @@ Description: # 项目简介
         ./install.sh
         ```
         
+        ---
         ## 模块介绍
         
+        ---
         ### qdata
         
         #### 类CDataDescriptor
         
-        使用该类来提供描述一张表,方便在transmatrix中管理.
+        使用该类来提供描述一张表,方便在transmatrix中管理使用.
         
         #### 函数save_df_to_db
         
-        将一个pd.Dataframe 保存到指定表中.
+        将一个pd.Dataframe保存到指定表中.
         
+        ---
         ### qwidgets
         
         #### 终端输出渲染
@@ -41,17 +44,92 @@ Description: # 项目简介
         print(f"This output is normal, {SFG('but this output is green')}")
         ```
         
+        ---
+        ### qplot
+        
+        `matplotlib`基础上进一步封装的绘图函数, 在Pycharm/VSCode智能提示加持下, 绘图参数更加清晰.
+        
+        以下示例
+        
+        #### 生成数据
+        ```python
+        import pandas as pd
+        from random import randint
+        
+        test_size = 60
+        data = pd.DataFrame(
+            {
+                "T": [str(_) for _ in range(2014, 2014 + test_size)],
+                "x": [randint(95, 105) for _ in range(test_size)],
+                "y": [randint(95, 105) for _ in range(test_size)],
+            }
+        ).set_index("T")
+        ```
+        
+        #### 绘图
+        ```python
+        from qtools_sxzq.qplot import CPlotLines
+        
+        my_artist = CPlotLines(
+            plot_data=data,
+            fig_name="test-qplot-lines",  # 保存图片文件名
+            fig_save_dir=r"/tmp",  # 保存位置
+            line_width=4,  # 线条宽度
+            line_style=["-", "-."],  # 线条样式
+            line_color=["#DC143C", "#228B22"],  # 线条颜色,可以用utility.view_colors查看更多颜色
+        )
+        my_artist.plot()
+        my_artist.set_legend(size=16, loc="upper left")  # 设置图例
+        my_artist.set_axis_x(  # 设置x轴
+            xtick_count=10,  # x轴标签数量
+            # xtick_spread=20, # x轴标签间距,与数量不要同时设置
+            xlabel="Test-XLabels",  # x轴标签
+            xtick_label_size=24,  # x轴刻度标签大小
+            xtick_label_rotation=45,  # x轴刻度标签旋转角度
+        )
+        my_artist.set_title(title="test-qplot-lines", size=48, loc="left")
+        my_artist.save_and_close()
+        ```
+        
+        **绘图时请确认data是pd.DataFrame, 且索引index是字符串格式，否则set_axis_x()函数可能不会正常运行**
+        
+        ---
+        ### utility.ls_tqdb
+        
+        展示数据库中所有可用表.
+        
+        ```bash
+        python -m qtools_sxzq.utility.ls_tqdb --lib huxiaoou_private
+        ```
+        
+        ---
+        ### utility.rm_tqdb
+        
+        删除数据库中指定表
+        
+        ```bash
+        python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private --table name_of_table_to_remove
+        ```
+        
+        删除数据库中所有表
+        
+        ```bash
+        python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private -r
+        ```
+        
+        ---
         ### utility.view_tqdb
         
         使用view_tqdb在终端中快速查看数据库.
         
-        #### 查看帮助 
+        #### 查看帮助
         
         ```bash
          python -m qtools_sxzq.utility.view_tqdb -h
         ```
         
         输出
+        
         ```bash
         usage: view_tqdb.py [-h] --lib LIB --table TABLE [--vars VARS] [--where WHERE] [--head HEAD] [--tail TAIL] [--maxrows MAXROWS]
         
@@ -93,6 +171,15 @@ Description: # 项目简介
         ```
         
         注意,由于`open`和`close`两个价格和数据库中保留关键字重复,需要使用"`"符号包围起来.
+        
+        ---
+        ### utility.view_colors
+        
+        查看各项颜色代码
+        
+        ```bash
+        python -m qtools_sxzq.utility.view_colors
+        ```
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: MIT License
