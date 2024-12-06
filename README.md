@@ -23,6 +23,47 @@ chmod +x ./install.sh
 
 将一个pd.Dataframe保存到指定表中.
 
+```python
+def save_df_to_db(df: pd.DataFrame, db_name: str, table_name: str):
+    """
+
+    :param df: 待保存的数据, 不需要含有 ["code", "datetime"] 列
+    :param db_name: 保存的数据库
+    :param table_name: 保存的表
+    :return:
+    """
+```
+
+#### 函数save_data3d_to_db
+
+将一个`dict[str, pd.DataFrame | DataView2d]` 结构存入到指定表中.
+
+```python
+
+def save_data3d_to_db_with_key_as_code(
+        data_3d: dict[str, Union[pd.DataFrame, DataView2d]],
+        table_name: str,
+        using_index_as_datetime: bool = True,
+        datetime_name: str = "datetime",
+):
+    """
+        :param data_3d: 待保存的数据,字典结构. 对其中每一组 (key, value) 对要求:
+                        key 值将被插入最终的表中, 并被重命名为 'code'.
+                        value 类型必须是 pd.DataFrame 或 DataView2d.
+                        且必须是以下两种数据结构:
+                            1. index为时间 + 所有列对应待插入表中的fields. 在这种情况下设置 using_index_as_datetime = True,
+                               此时参数datetime_name不产生作用
+                            2. 表中某一列表示时间, 即列 = [datetime_name] + fields. 在这种情况下设置 set using_index_as_datetime = False.
+                               并需要提供参数 datetime_name
+        :param table_name: 待保存进去的数据库中的表名, 默认在个人私有库下, 若权限允许可以是 "other_db.table_name"结构
+        :param using_index_as_datetime: 若为 true, 确保value的index是时间. 否则用下面的参数datetime_name来指定时间列.
+        :param datetime_name: value的index不是时间的前提下, 用该变量对应的列来表示时间.
+    """
+
+```
+
+
+
 ---
 ### qwidgets
 
@@ -83,7 +124,7 @@ my_artist.set_title(title="test-qplot-lines", size=48, loc="left")
 my_artist.save_and_close()
 ```
 
-**绘图时请确认data是pd.DataFrame, 且索引index是字符串格式，否则set_axis_x()函数可能不会正常运行**
+**绘图时请确认data是pd.DataFrame, 且索引index是字符串格式,否则set_axis_x()函数可能不会正常运行**
 
 ---
 ### utility.ls_tqdb
