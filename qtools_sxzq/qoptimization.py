@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.optimize import minimize, NonlinearConstraint, OptimizeResult
-
+from typing import Union
 
 class COptimizerPortfolio:
     def __init__(self, m: np.ndarray, v: np.ndarray):
@@ -52,7 +52,7 @@ class COptimizerPortfolio:
 
 
 class _COptimizerScipyMinimize(COptimizerPortfolio):
-    def __init__(self, m: np.ndarray, v: np.ndarray, x0: np.ndarray | str, max_iter: int, tol: float):
+    def __init__(self, m: np.ndarray, v: np.ndarray, x0: Union[np.ndarray, str], max_iter: int, tol: float):
         """
 
         :param x0: init guess, or a string to indicate the method to generate init guess, available
@@ -77,7 +77,7 @@ class _COptimizerScipyMinimize(COptimizerPortfolio):
 class COptimizerPortfolioUtility(_COptimizerScipyMinimize):
     def __init__(
             self,
-            m: np.ndarray, v: np.ndarray, lbd: float, x0: np.ndarray | str,
+            m: np.ndarray, v: np.ndarray, lbd: float, x0: Union[np.ndarray, str],
             tot_mkt_val_bds: tuple[float, float] = (0.0, 1.0),
             bounds: list[tuple[float, float]] = None,
             max_iter: int = 50000,
@@ -123,7 +123,7 @@ class COptimizerPortfolioUtility(_COptimizerScipyMinimize):
 class COptimizerPortfolioSharpe(_COptimizerScipyMinimize):
     def __init__(
             self,
-            m: np.ndarray, v: np.ndarray, x0: np.ndarray | str,
+            m: np.ndarray, v: np.ndarray, x0: Union[np.ndarray, str],
             bounds: list[tuple[float, float]],
             max_iter: int = 50000,
             tol: float = 1e-6,
