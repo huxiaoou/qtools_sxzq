@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import minimize, NonlinearConstraint, OptimizeResult
 from typing import Union
 
+
 class COptimizerPortfolio:
     def __init__(self, m: np.ndarray, v: np.ndarray):
         """
