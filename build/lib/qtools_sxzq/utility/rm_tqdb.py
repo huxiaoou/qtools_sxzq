@@ -1,5 +1,4 @@
 import argparse
-import re
 from transmatrix.data_api import Database
 from qtools_sxzq.qwidgets import SFG
 
@@ -40,12 +39,14 @@ def main():
         tabs = db.show_tables()
         if tabs:
             for i, tab in enumerate(tabs):
-                if re.match(pattern=r".*_mapping_\d{13}_\d{2}$", string=tab):
-                    print(f"skip {i:>3d} {tab}, mapping file will be removed automatically when its master is removed")
-                else:
-                    print(f"removing {i:>3d} {tab}")
+                print(f"removing {i:>3d} {tab}")
+                # re.match(pattern=r".*_mapping_\d{13}_\d{2}$", string=tab):
+                try:
                     db.truncate_table(tab)
                     db.delete_table(tab)
+                except ConnectionError:
+                    print(f"skip {i:>3d} {tab}, file has been removed.")
+
         else:
             print(f"{SFG(lib_name)} has no tables")
     else:
