@@ -32,6 +32,18 @@ def parse_args():
         help="conditions to filter, sql expressions "
              "like \"code = 'A9999_DCE'\" AND datetime >= '2024-10-01 09:00:00'",
     )
+    args_parser.add_argument(
+        "--sort",
+        type=str,
+        default=None,
+        help="like 'datetime' or 'datetime,code'",
+    )
+    args_parser.add_argument(
+        "--descending",
+        default=False,
+        action="store_true",
+        help="sort data in descending order",
+    )
 
     args_parser.add_argument("--head", type=int, default=0, help="integer, head lines to print")
     args_parser.add_argument("--tail", type=int, default=0, help="integer, tail lines to print")
@@ -64,6 +76,10 @@ def main():
 
     col_names = args.vars.split(",") if args.vars else "*"
     df = fetch(args.lib, args.table, col_names, args.where)
+
+    if args.sort:
+        df = df.sort_values(args.sort.split(","), ascending=not args.descending)
+
     if args.head == 0 and args.tail == 0:
         print(df)
     else:
