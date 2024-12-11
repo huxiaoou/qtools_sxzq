@@ -173,6 +173,8 @@ optional arguments:
   --lib LIB          path for trans-quant database, like 'huxiaoou_private' or 'meta_data'
   --table TABLE      table name in the database, like 'table_avlb' or 'future_bar_1day'
   --vars VARS        variables to fetch, separated by ',' like "open,high,low,close", if not provided then fetch all.
+  --sort SORT        like 'datetime' or 'datetime,code'
+  --descending       sort data in descending order
   --where WHERE      conditions to filter, sql expressions like "code = 'A9999_DCE'" AND datetime >= '2024-10-01 09:00:00'
   --head HEAD        integer, head lines to print
   --tail TAIL        integer, tail lines to print
