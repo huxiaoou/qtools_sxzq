@@ -27,6 +27,30 @@ class CDataDescriptor:
         self.lag = lag
 
 
+@dataclass
+class CMarketDescriptor:
+    data: list[str]  # [lib_name, table_name]
+    matcher: str  # daily
+    ini_cash: float
+    fee_rate: float
+    account: str  # "detail"
+    settle_price_table: list[str]  # [lib_name, table_name], like ["meta_data", "future_bar_1day"]
+    settle_price_field: str  # name of price to used as settle, usually = "settle"
+
+    def to_dict(self) -> dict:
+        return {
+            "data": self.data,
+            "matcher": self.matcher,
+            "ini_cash": self.ini_cash,
+            "fee_rate": self.fee_rate,
+            "account": self.account,
+            "account_info": {
+                "settle_price_table": self.settle_price_table,
+                "settle_price_field": self.settle_price_field,
+            }
+        }
+
+
 def save_df_to_db(df: pd.DataFrame, db_name: str, table_name: str):
     """
 
