@@ -153,12 +153,12 @@ python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private -r
 ---
 ### utility.view_tqdb
 
-使用view_tqdb在终端中快速查看数据库.
+使用view_tqdb在终端中快速查看transquant数据库.
 
 #### 查看帮助
 
 ```bash
- python -m qtools_sxzq.utility.view_tqdb -h
+python -m qtools_sxzq.utility.view_tqdb -h
 ```
 
 输出
@@ -206,6 +206,38 @@ SELECT code,trade_day,`open`,high,low,`close` FROM future_bar_1day:
 ```
 
 注意,由于`open`和`close`两个价格和数据库中保留关键字重复,需要使用"`"符号包围起来.
+
+
+---
+### utility.view_sql
+
+使用view_tqdb在终端中快速查看sqlite数据库.
+
+#### 查看帮助
+
+```bash
+python -m qtools_sxzq.utility.view_sql -h
+```
+
+输出
+
+```bash
+usage: view_sql.py [-h] --lib LIB --table TABLE [--vars VARS] [--where WHERE] [--head HEAD] [--tail TAIL] [--maxrows MAXROWS]
+
+A python script to view hdf5
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --lib LIB          path for sql file, like 'E:\tmp\alternative.db'
+  --table TABLE      table name in the sql file, like 'macro' or 'forex' in alternative.db
+  --vars VARS        variables to fetch, separated by ',' like "open,high,low,close", if not provided then fetch all.
+  --where WHERE      conditions to filter, sql expression like "(instrument = 'a' OR instrument = 'd') AND (trade_date <= '20120131')"
+  --head HEAD        integer, head lines to print
+  --tail TAIL        integer, tail lines to print
+  --maxrows MAXROWS  integer, provide larger value to see more rows when print outcomes
+```
+
+用法类似`qtools_sxzq.utility.view_tqdb`
 
 ---
 ### utility.view_colors
