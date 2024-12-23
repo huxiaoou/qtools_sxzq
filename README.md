@@ -78,6 +78,26 @@ print(f"This output is normal, {SFG('but this output is green')}")
 ```
 
 ---
+### qcalendar
+
+提供一个CCalendar类,处理日频的交易日期
+
+```python
+from qtools_sxzq.qcalendar import CCalendar 
+calendar = CCalendar("calendar.csv")
+trade_dates = calendar.get_iter_list(bgn_date="20120104",stp_date="20120111")
+print(trade_dates)
+```
+
+输出
+
+```bash
+    ['20120104', '20120105', '20120106', '20120109', '20120110']
+```
+
+更多用法请参考该类的方法.
+
+---
 ### qplot
 
 `matplotlib`基础上进一步封装的绘图函数, 在Pycharm/VSCode智能提示加持下, 绘图参数更加清晰.
