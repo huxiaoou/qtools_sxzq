@@ -10,9 +10,11 @@ chmod +x ./install.sh
 ```
 
 ---
+
 ## 模块介绍
 
 ---
+
 ### qdata
 
 #### 类CDataDescriptor
@@ -62,9 +64,8 @@ def save_data3d_to_db_with_key_as_code(
 
 ```
 
-
-
 ---
+
 ### qwidgets
 
 #### 终端输出渲染
@@ -78,14 +79,16 @@ print(f"This output is normal, {SFG('but this output is green')}")
 ```
 
 ---
+
 ### qcalendar
 
 提供一个CCalendar类,处理日频的交易日期
 
 ```python
-from qtools_sxzq.qcalendar import CCalendar 
+from qtools_sxzq.qcalendar import CCalendar
+
 calendar = CCalendar("calendar.csv")
-trade_dates = calendar.get_iter_list(bgn_date="20120104",stp_date="20120111")
+trade_dates = calendar.get_iter_list(bgn_date="20120104", stp_date="20120111")
 print(trade_dates)
 ```
 
@@ -97,7 +100,98 @@ print(trade_dates)
 
 更多用法请参考该类的方法.
 
+
 ---
+
+### qcalendar
+
+提供一个`CMgrSqlDb` `CDbStruct`等类来管理`sqldb`数据库
+
+```python
+import pandas as pd
+import scipy.stats as sps
+import random
+
+
+def create_data(nrow: int, ncol: int, cnames: list[str], hist_dates: list[str],
+                random_state: int = None) -> pd.DataFrame:
+    _data = sps.norm.rvs(size=(nrow, ncol), loc=0, scale=1, random_state=random_state)
+    _df = pd.DataFrame(data=_data, columns=cnames)
+    _df["trade_date"] = hist_dates[0:nrow]
+    _df["instrument"] = random.choices(population=list("abcd"), k=nrow)
+    _df = _df[["trade_date"] + ["instrument"] + cnames]
+    return _df
+
+
+if __name__ == "__main__":
+    from qtools_sxzq.qcalendar import CCalendar
+    from qtools_sxzq.qsqlite import CMgrSqlDb, CSqlTable, CSqlVar
+
+    calendar_path = r"/path/to/calendar"
+    calendar = CCalendar(calendar_path)
+    h_dates = calendar.get_iter_list(bgn_date="20120101", stp_date="20250101")
+
+    db_save_dir, db_name = r"/tmp", "test.db"
+    table_name = "testTable"
+    nr, nc = 20, 5
+    cnms = [f"C{_:02d}" for _ in range(nc)]
+    df = create_data(nr * 2, nc, cnames=cnms, hist_dates=h_dates)
+    df_head, df_tail = df.head(nr), df.tail(nr).reset_index(drop=True)
+    table = CSqlTable(
+        name=table_name,
+        primary_keys=[CSqlVar("trade_date", "TEXT"), CSqlVar("instrument", "TEXT")],
+        value_columns=[CSqlVar(_, "REAL") for _ in cnms]
+    )
+    sql_lib = CMgrSqlDb(
+        db_save_dir=db_save_dir,
+        db_name=db_name,
+        table=table,
+        mode="w",
+        verbose=True,
+    )
+
+    # --- first writing
+    append_date = df_head["trade_date"].iloc[0]
+    if sql_lib.check_continuity(incoming_date=append_date, calendar=calendar) == 0:
+        sql_lib.update(df_head)
+        df0 = sql_lib.read()
+        print(f"The original data length = {len(df0)} ")
+        print(df0)
+
+    # --- appending
+    append_date = df_tail["trade_date"].iloc[0]
+    if sql_lib.check_continuity(incoming_date=append_date, calendar=calendar) == 0:
+        sql_lib.update(df_tail)
+        print("Append data to lib")
+        df0 = sql_lib.read()
+        print(f"After appending, data length = {len(df0)} ")
+        print(df0)
+
+    # --- head and tail
+    print("The first 5 rows from the data, with columns=['trade_date', 'C00']")
+    print(sql_lib.head(value_columns=["trade_date", "C00"]))
+    print("The last 10 rows from the data")
+    print(sql_lib.tail(n=10))
+
+    # --- query
+    df1 = sql_lib.read_by_conditions(conditions=[("trade_date", "<=", "20120131")])
+    print("Query: trade_date <= '20120131'")
+    print(df1)
+
+    df3 = sql_lib.read_by_conditions(conditions=[("instrument", "=", "d"), ("trade_date", "<", "20120205")])
+    print("Query: (instrument = 'd') AND (trade_date < '20120205')")
+    print(df3)
+
+    # --- continuity check
+    sql_lib.check_continuity(incoming_date="20120306", calendar=calendar)
+    sql_lib.check_continuity(incoming_date="20120307", calendar=calendar)
+    sql_lib.check_continuity(incoming_date="20120308", calendar=calendar)
+```
+
+更多用法请参考该类的方法.
+
+---
+
 ### qplot
 
 `matplotlib`基础上进一步封装的绘图函数, 在Pycharm/VSCode智能提示加持下, 绘图参数更加清晰.
@@ -105,6 +199,7 @@ print(trade_dates)
 以下示例
 
 #### 生成数据
+
 ```python
 import pandas as pd
 from random import randint
@@ -120,6 +215,7 @@ data = pd.DataFrame(
 ```
 
 #### 绘图
+
 ```python
 from qtools_sxzq.qplot import CPlotLines
 
@@ -147,6 +243,7 @@ my_artist.save_and_close()
 **绘图时请确认data是pd.DataFrame, 且索引index是字符串格式,否则set_axis_x()函数可能不会正常运行**
 
 ---
+
 ### utility.ls_tqdb
 
 展示数据库中所有可用表.
@@ -156,6 +253,7 @@ python -m qtools_sxzq.utility.ls_tqdb --lib huxiaoou_private
 ```
 
 ---
+
 ### utility.rm_tqdb
 
 删除数据库中指定表
@@ -171,6 +269,7 @@ python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private -r
 ```
 
 ---
+
 ### utility.view_tqdb
 
 使用view_tqdb在终端中快速查看transquant数据库.
@@ -229,6 +328,7 @@ SELECT code,trade_day,`open`,high,low,`close` FROM future_bar_1day:
 
 
 ---
+
 ### utility.view_sql
 
 使用view_tqdb在终端中快速查看sqlite数据库.
@@ -260,6 +360,7 @@ optional arguments:
 用法类似`qtools_sxzq.utility.view_tqdb`
 
 ---
+
 ### utility.view_colors
 
 查看各项颜色代码

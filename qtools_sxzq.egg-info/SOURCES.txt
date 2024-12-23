@@ -5,6 +5,7 @@ qtools_sxzq/qcalendar.py
 qtools_sxzq/qdata.py
 qtools_sxzq/qoptimization.py
 qtools_sxzq/qplot.py
+qtools_sxzq/qsqlite.py
 qtools_sxzq/qwidgets.py
 qtools_sxzq.egg-info/PKG-INFO
 qtools_sxzq.egg-info/SOURCES.txt
