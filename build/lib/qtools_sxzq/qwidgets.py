@@ -1,3 +1,4 @@
+import re
 import datetime as dt
 from typing import Union
 
@@ -16,3 +17,7 @@ SFB = SetFontColor(c="0;34;40")  # Blue
 SFM = SetFontColor(c="0;35;40")  # Magenta
 SFC = SetFontColor(c="0;36;40")  # Cyan
 SFW = SetFontColor(c="0;37;40")  # White
+
+
+def parse_instrument_from_contract(contract_id: str) -> str:
+    return re.sub(pattern="[0-9]", repl="", string=contract_id)
