@@ -2,6 +2,7 @@ import os
 import dataclasses
 import pandas as pd
 import sqlite3 as sql3
+from typing import Union
 from qtools_sxzq.qcalendar import CCalendar
 from qtools_sxzq.qwidgets import SFR, SFY, SFG
 
@@ -160,10 +161,10 @@ class CMgrSqlDb(object):
         return f"{self.db_name}/{self.table.name}"
 
     @staticmethod
-    def parse_value_columns(value_columns: list[str] | None) -> str:
+    def parse_value_columns(value_columns: Union[list[str], None]) -> str:
         return ", ".join(value_columns) if value_columns else "*"
 
-    def get_column_names(self, value_columns: list[str] | None) -> list[str]:
+    def get_column_names(self, value_columns: Union[list[str], None]) -> list[str]:
         return value_columns or self.table.vars.names
 
     def __execute_cmd_read(self, cmd_sql: str) -> list:
@@ -195,7 +196,7 @@ class CMgrSqlDb(object):
         self.__execute_cmd_write(cmd_sql_rm_table)
         return 0
 
-    def read(self, value_columns: list[str] | None = None) -> pd.DataFrame:
+    def read(self, value_columns: Union[list[str], None] = None) -> pd.DataFrame:
         str_value_columns = self.parse_value_columns(value_columns)
         cmd_sql_for_inquiry = f"SELECT {str_value_columns} FROM {self.table.name}"
         rows = self.__execute_cmd_read(cmd_sql_for_inquiry)
@@ -205,19 +206,19 @@ class CMgrSqlDb(object):
     def empty(self) -> bool:
         return self.read().empty
 
-    def head(self, n: int = 5, value_columns: list[str] | None = None) -> pd.DataFrame:
+    def head(self, n: int = 5, value_columns: Union[list[str], None] = None) -> pd.DataFrame:
         str_value_columns = self.parse_value_columns(value_columns)
         cmd_sql_get_head = f"SELECT {str_value_columns} FROM {self.table.name} ORDER BY rowid LIMIT {n}"
         rows = self.__execute_cmd_read(cmd_sql_get_head)
         return pd.DataFrame(data=rows, columns=self.get_column_names(value_columns))
 
-    def tail(self, n: int = 5, value_columns: list[str] | None = None) -> pd.DataFrame:
+    def tail(self, n: int = 5, value_columns: Union[list[str], None] = None) -> pd.DataFrame:
         str_value_columns = self.parse_value_columns(value_columns)
         cmd_sql_get_tail = f"SELECT {str_value_columns} FROM {self.table.name} ORDER BY rowid DESC LIMIT {n}"
         rows = self.__execute_cmd_read(cmd_sql_get_tail)[::-1]
         return pd.DataFrame(data=rows, columns=self.get_column_names(value_columns))
 
-    def last_val(self, val: str, val_if_none: int | float | str) -> float:
+    def last_val(self, val: str, val_if_none: Union[int, float, str]) -> float:
         last_data = self.tail(n=1, value_columns=[val])
         if last_data.empty:
             return val_if_none
@@ -225,7 +226,7 @@ class CMgrSqlDb(object):
             return last_data[val].iloc[-1]
 
     def read_by_conditions(self, conditions: list[tuple[str, str, str]],
-                           value_columns: list[str] | None = None) -> pd.DataFrame:
+                           value_columns: Union[list[str], None] = None) -> pd.DataFrame:
         """
 
         :param conditions: a list of tuple[str ...], like:
@@ -247,13 +248,13 @@ class CMgrSqlDb(object):
         rows = self.__execute_cmd_read(cmd_sql_query)
         return pd.DataFrame(data=rows, columns=self.get_column_names(value_columns))
 
-    def read_by_date(self, date: str, value_columns: list[str] | None = None):
+    def read_by_date(self, date: str, value_columns: Union[list[str], None] = None):
         return self.read_by_conditions(
             conditions=[("trade_date", "=", date)],
             value_columns=value_columns,
         )
 
-    def read_by_range(self, bgn_date: str, stp_date: str, value_columns: list[str] | None = None):
+    def read_by_range(self, bgn_date: str, stp_date: str, value_columns: Union[list[str], None] = None):
         return self.read_by_conditions(
             conditions=[
                 ("trade_date", ">=", bgn_date),
@@ -262,14 +263,14 @@ class CMgrSqlDb(object):
             value_columns=value_columns,
         )
 
-    def read_by_instrument(self, instrument: str, value_columns: list[str] | None = None):
+    def read_by_instrument(self, instrument: str, value_columns: Union[list[str], None] = None):
         return self.read_by_conditions(
             conditions=[("instrument", "=", instrument)],
             value_columns=value_columns,
         )
 
     def read_by_instrument_range(self, bgn_date: str, stp_date: str,
-                                 instrument: str, value_columns: list[str] | None = None):
+                                 instrument: str, value_columns: Union[list[str], None] = None):
         return self.read_by_conditions(
             conditions=[
                 ("trade_date", ">=", bgn_date),
