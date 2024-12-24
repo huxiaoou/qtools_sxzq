@@ -13,6 +13,7 @@ qtools_sxzq.egg-info/dependency_links.txt
 qtools_sxzq.egg-info/requires.txt
 qtools_sxzq.egg-info/top_level.txt
 qtools_sxzq/utility/__init__.py
+qtools_sxzq/utility/cls_prv_cache.py
 qtools_sxzq/utility/ls_tqdb.py
 qtools_sxzq/utility/rm_tqdb.py
 qtools_sxzq/utility/view_colors.py
