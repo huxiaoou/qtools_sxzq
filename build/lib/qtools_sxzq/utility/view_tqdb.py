@@ -53,6 +53,12 @@ def parse_args():
         default=0,
         help="integer, provide larger value to see more rows when print outcomes",
     )
+    args_parser.add_argument(
+        "--maxcols",
+        type=int,
+        default=0,
+        help="integer, provide larger value to see more columns when print outcomes",
+    )
     _args = args_parser.parse_args()
     return _args
 
@@ -73,6 +79,8 @@ def main():
     args = parse_args()
     if args.maxrows > 0:
         pd.set_option("display.max_rows", args.maxrows)
+    if args.maxcols > 0:
+        pd.set_option("display.max_columns", args.maxcols)
 
     col_names = args.vars.split(",") if args.vars else "*"
     df = fetch(args.lib, args.table, col_names, args.where)
