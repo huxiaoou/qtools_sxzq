@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
-from typing import Union
+from typing import Union, Literal
 
 matplotlib.use("Agg")
 plt.rcParams["font.sans-serif"] = ["SimHei"]
@@ -37,7 +37,7 @@ class CPlot(object):
         self.fig = plt.figure(figsize=self.fig_size)
         self.ax = plt.axes()
 
-    def set_title(self, title: str = None, size: int = 32, loc: str = "center"):
+    def set_title(self, title: str = None, size: int = 32, loc: Literal["left", "center", "right"] = "center"):
         """
 
         :param title:
@@ -208,6 +208,7 @@ class CPlotFromDataFrame(CPlot):
             "xlabel_size": xlabel_size,
             "xtick_label_size": xtick_label_size,
             "xtick_label_rotation": xtick_label_rotation,
+            "xtick_direction": xtick_direction,
             "xgrid_visible": xgrid_visible,
         }
         if xlim == (None, None):
@@ -243,6 +244,7 @@ class CPlotFromDataFrame(CPlot):
             "ylabel_size": ylabel_size,
             "ytick_label_size": ytick_label_size,
             "ytick_label_rotation": ytick_label_rotation,
+            "ytick_direction": ytick_direction,
             "ygrid_visible": ygrid_visible,
         }
         if ylim == (None, None):
