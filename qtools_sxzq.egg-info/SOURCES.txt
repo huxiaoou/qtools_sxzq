@@ -3,6 +3,7 @@ setup.py
 qtools_sxzq/__init__.py
 qtools_sxzq/qcalendar.py
 qtools_sxzq/qdata.py
+qtools_sxzq/qevaluation.py
 qtools_sxzq/qoptimization.py
 qtools_sxzq/qplot.py
 qtools_sxzq/qsqlite.py
