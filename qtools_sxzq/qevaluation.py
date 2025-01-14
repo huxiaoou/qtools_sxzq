@@ -103,7 +103,7 @@ class CNAV(object):
 
         # secondary
         self.max_drawdown_scale: CIndicatorsWithSeries = CIndicatorsWithSeries(
-            display_scale=ret_scale_display, display_fmt=".3f", srs=pd.Series(index=self.nav_srs.index),
+            display_scale=ret_scale_display, display_fmt=".3f", srs=pd.Series(index=self.nav_srs.index, dtype=float),
         )
         self.longest_drawdown_duration: CIndicatorsWithSeries = CIndicatorsWithSeries(
             display_scale=1, display_fmt="d", srs=pd.Series(data=0, index=self.nav_srs.index),
