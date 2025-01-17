@@ -103,7 +103,7 @@ print(trade_dates)
 
 ---
 
-### qcalendar
+### qsqlite
 
 提供一个`CMgrSqlDb` `CDbStruct`等类来管理`sqldb`数据库
 
@@ -244,6 +244,74 @@ my_artist.save_and_close()
 
 ---
 
+### qevaluation
+
+回测绩效评估模块, 计算收益率(净值)曲线的常见风险收益指标
+
+#### 生成模拟的收益率序列
+
+```python
+import scipy.stats as sps
+import pandas as pd
+
+n = 250
+ret_val = sps.norm.rvs(size=n, loc=0.001, scale=0.01, random_state=0)
+start_date = pd.Timestamp.now()
+date_range = pd.date_range(start=start_date, periods=n)
+ret_srs = pd.Series(data=ret_val, index=date_range)
+print(ret_srs)
+```
+
+输出结果
+
+```bash
+2025-01-17 10:42:37.590840    0.018641
+2025-01-18 10:42:37.590840    0.005002
+2025-01-19 10:42:37.590840    0.010787
+2025-01-20 10:42:37.590840    0.023409
+2025-01-21 10:42:37.590840    0.019676
+                                ...
+2025-09-19 10:42:37.590840   -0.015760
+2025-09-20 10:42:37.590840    0.012523
+2025-09-21 10:42:37.590840    0.011796
+2025-09-22 10:42:37.590840   -0.007134
+2025-09-23 10:42:37.590840   -0.013664
+```
+
+调用`qevaluation`计算指标
+
+```python
+import pandas as pd
+from qtools_sxzq.qevaluation import CNAV
+
+nav = CNAV(input_srs=ret_srs, input_type="RET")
+nav.cal_all_indicators()
+sum_data = nav.to_dict()
+
+pd.set_option("display.float_format", "{:.6f}".format)
+print(pd.Series(sum_data))
+```
+
+输出结果
+
+```bash
+retMean                        0.001318 # 收益率均值
+retStd                         0.009981 # 收益率标准差
+hpr                            0.372830 # 持有期收益
+retAnnual                      0.329452 # 年华收益
+volAnnual                      0.157813 # 年化波动
+sharpe                         2.087605 # 夏普比率
+calmar                         2.758407 # 卡玛比率
+mdd                            0.119436 # 最大回撤
+mddT         2025-04-07 10:42:37.590840 # 最大回撤结束时间
+lddDur                               49 # 最长回撤期
+lddDurT      2025-04-07 10:42:37.590840 # 最长回撤期结束时间
+lrd                                  68 # 最长恢复期
+lrdT         2025-04-26 10:42:37.590840 # 最长恢复期结束时间
+```
+
+---
+
 ### utility.ls_tqdb
 
 展示数据库中所有可用表.
@@ -272,7 +340,7 @@ python -m qtools_sxzq.utility.rm_tqdb --lib huxiaoou_private -r
 
 ### utility.view_tqdb
 
-使用view_tqdb在终端中快速查看transquant数据库.
+使用view_tqdb在终端中快速查看`transquant`数据库.
 
 #### 查看帮助
 
@@ -326,6 +394,15 @@ SELECT code,trade_day,`open`,high,low,`close` FROM future_bar_1day:
 
 注意,由于`open`和`close`两个价格和数据库中保留关键字重复,需要使用"`"符号包围起来.
 
+---
+
+### utility.cls_prv_cache
+
+清空`transquant`私有库的缓存数据
+
+```bash
+python -m qtools_sxzq.utility.cls_prv_cache
+```
 
 ---
 
