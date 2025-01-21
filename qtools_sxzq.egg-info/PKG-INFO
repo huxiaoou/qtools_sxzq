@@ -238,8 +238,6 @@ Description: # 项目简介
         
         my_artist = CPlotLines(
             plot_data=data,
-            fig_name="test-qplot-lines",  # 保存图片文件名
-            fig_save_dir=r"/tmp",  # 保存位置
             line_width=4,  # 线条宽度
             line_style=["-", "-."],  # 线条样式
             line_color=["#DC143C", "#228B22"],  # 线条颜色,可以用utility.view_colors查看更多颜色
@@ -254,7 +252,12 @@ Description: # 项目简介
             xtick_label_rotation=45,  # x轴刻度标签旋转角度
         )
         my_artist.set_title(title="test-qplot-lines", size=48, loc="left")
-        my_artist.save_and_close()
+        my_artist.save(
+            fig_save_dir=r"/tmp",  # 保存位置
+            fig_name="test-qplot-lines",  # 保存图片文件名
+            fig_save_type="pdf",  # 图片保存类型
+        )
+        my_artist.close()
         ```
         
         **绘图时请确认data是pd.DataFrame, 且索引index是字符串格式,否则set_axis_x()函数可能不会正常运行**
