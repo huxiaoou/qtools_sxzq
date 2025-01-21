@@ -11,26 +11,13 @@ plt.rcParams["axes.unicode_minus"] = False  # make compatible with negative or m
 
 
 class CPlot(object):
-    def __init__(
-            self,
-            fig_name: str,
-            fig_save_dir: str,
-            fig_save_type: str = "pdf",
-            fig_size: tuple[float, float] = (16, 9),
-            style: str = "seaborn-v0_8-poster",
-    ):
+    def __init__(self, fig_size: tuple[float, float] = (16, 9), style: str = "seaborn-v0_8-poster"):
         """
 
-        :param fig_name:
-        :param fig_save_dir:
-        :param fig_save_type:
         :param fig_size:
         :param style: more styles comes from
                       https://matplotlib.org/3.7.5/gallery/style_sheets/style_sheets_reference.html
         """
-        self.fig_name = fig_name
-        self.fig_save_dir = fig_save_dir
-        self.fig_save_type = fig_save_type
         self.fig_size = fig_size
         self.style = style
         plt.style.use(self.style)
@@ -141,9 +128,9 @@ class CPlot(object):
         self.ax.text(x, y, s=text, fontdict={"size": size})
         return 0
 
-    def save(self, dpi: int = 300):
-        fig0_name = f"{self.fig_name}.{self.fig_save_type}"
-        fig0_path = os.path.join(self.fig_save_dir, fig0_name)
+    def save(self, fig_name: str, fig_save_dir: str, fig_save_type: str = "pdf", dpi: int = 300):
+        fig0_name = f"{fig_name}.{fig_save_type}"
+        fig0_path = os.path.join(fig_save_dir, fig0_name)
         self.fig.savefig(fig0_path, bbox_inches="tight", dpi=dpi)
         return 0
 
@@ -154,19 +141,11 @@ class CPlot(object):
     def plot(self):
         raise NotImplementedError
 
-    def save_and_close(self, dpi: int = 300):
-        self.save(dpi=dpi)
-        self.close()
-        return 0
-
 
 class CPlotFromDataFrame(CPlot):
     def __init__(
             self,
             plot_data: pd.DataFrame,
-            fig_name: str,
-            fig_save_dir: str,
-            fig_save_type: str = "pdf",
             fig_size: tuple[float, float] = (16, 9),
             style: str = "seaborn-v0_8-poster",
             colormap: str = None,
@@ -179,13 +158,7 @@ class CPlotFromDataFrame(CPlot):
         self.plot_data = plot_data
         self.data_len = len(plot_data)
         self.colormap = colormap
-        super().__init__(
-            fig_name=fig_name,
-            fig_save_dir=fig_save_dir,
-            fig_save_type=fig_save_type,
-            fig_size=fig_size,
-            style=style,
-        )
+        super().__init__(fig_size=fig_size, style=style)
 
     def set_axis_x(
             self,
@@ -277,9 +250,6 @@ class CPlotLines(CPlotFromDataFrame):
     def __init__(
             self,
             plot_data: pd.DataFrame,
-            fig_name: str,
-            fig_save_dir: str,
-            fig_save_type: str = "pdf",
             fig_size: tuple[float, float] = (16, 9),
             style: str = "seaborn-v0_8-poster",
             colormap: str = None,
@@ -333,9 +303,6 @@ class CPlotLines(CPlotFromDataFrame):
         self.line_color = line_color
         super().__init__(
             plot_data=plot_data,
-            fig_name=fig_name,
-            fig_save_dir=fig_save_dir,
-            fig_save_type=fig_save_type,
             fig_size=fig_size,
             style=style,
             colormap=colormap,
