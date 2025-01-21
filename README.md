@@ -9,6 +9,15 @@ chmod +x ./install.sh
 ./install.sh
 ```
 
+### 可选步骤
+
+安装脚本到`/usr/local/bin`目录, 调用`utility`目录下各类函数时更方便.
+
+```bash
+chmod +x ./install_to_bin.sh
+./install_to_bin.sh
+```
+
 ---
 
 ## 模块介绍
@@ -318,6 +327,12 @@ lrdT         2025-04-26 10:42:37.590840 # 最长恢复期结束时间
 
 ```bash
 python -m qtools_sxzq.utility.ls_tqdb --lib huxiaoou_private
+```
+
+若安装时执行了可选步骤, 可以直接调用. 其余几个函数类似.
+
+```bash
+ls_tqdb --lib huxiaoou_private
 ```
 
 ---
