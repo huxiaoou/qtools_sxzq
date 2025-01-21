@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 from transmatrix.data_api import Database
 from qtools_sxzq.qwidgets import SFG

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 if __name__ == '__main__':
     from transmatrix.data_api import clear_private_datacache
 

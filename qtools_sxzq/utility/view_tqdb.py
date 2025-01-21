@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 from typing import Union
 from qtools_sxzq.qwidgets import SFG
