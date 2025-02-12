@@ -108,7 +108,7 @@ def save_data3d_to_db_with_key_as_code(
             data.reset_index(inplace=True)
         data.rename(columns={datetime_name: "datetime"}, inplace=True)
         dst_path = f"{db_name}.{table_name}"
-        create_factor_table(dst_path, data)
+        create_factor_table(dst_path)
         save_factor(table_name=dst_path, data=data)
     else:
         print(f"No data available for saving")
