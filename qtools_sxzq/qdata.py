@@ -69,6 +69,7 @@ def save_df_to_db(df: pd.DataFrame, db_name: str, table_name: str):
 
 def save_data3d_to_db_with_key_as_code(
         data_3d: dict[str, Union[pd.DataFrame, DataView2d]],
+        db_name: str,
         table_name: str,
         using_index_as_datetime: bool = True,
         datetime_name: str = "datetime",
@@ -83,7 +84,8 @@ def save_data3d_to_db_with_key_as_code(
                            datetime_name won't work.
                         2. [datetime_name] + fields. in this case, set using_index_as_datetime = False, and provide
                            argument datetime_name, the corresponding column will be used as datetime.
-    :param table_name: the table to save
+    :param db_name: database to save data in
+    :param table_name: the table to save data in
     :param using_index_as_datetime: if true, make sure the type of index of the dataframe is datetime.
                                     else the following argument datetime_name must be provided.
     :param datetime_name: the name of the datetime column.
@@ -105,7 +107,8 @@ def save_data3d_to_db_with_key_as_code(
             datetime_name = data.index.name or "index"
             data.reset_index(inplace=True)
         data.rename(columns={datetime_name: "datetime"}, inplace=True)
-        create_factor_table(table_name)
-        save_factor(table_name=table_name, data=data)
+        dst_path = f"{db_name}.{table_name}"
+        create_factor_table(dst_path, data)
+        save_factor(table_name=dst_path, data=data)
     else:
         print(f"No data available for saving")
