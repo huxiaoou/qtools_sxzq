@@ -4,3 +4,4 @@ cp qtools_sxzq/utility/ls_tqdb.py /usr/local/bin/ls_tqdb
 cp qtools_sxzq/utility/rm_tqdb.py /usr/local/bin/rm_tqdb
 cp qtools_sxzq/utility/view_tqdb.py /usr/local/bin/view_tqdb
 cp qtools_sxzq/utility/view_sql.py /usr/local/bin/view_sql
+cp qtools_sxzq/utility/view_csv.py /usr/local/bin/view_csv

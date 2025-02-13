@@ -18,5 +18,6 @@ qtools_sxzq/utility/cls_prv_cache.py
 qtools_sxzq/utility/ls_tqdb.py
 qtools_sxzq/utility/rm_tqdb.py
 qtools_sxzq/utility/view_colors.py
+qtools_sxzq/utility/view_csv.py
 qtools_sxzq/utility/view_sql.py
 qtools_sxzq/utility/view_tqdb.py

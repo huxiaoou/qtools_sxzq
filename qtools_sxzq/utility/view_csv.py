@@ -1,23 +1,16 @@
 #!/usr/bin/env python
 
 import argparse
-import sqlite3 as sql3
 import pandas as pd
 
 
 def parse_args():
-    args_parser = argparse.ArgumentParser(description="A python script to view sqlite database")
+    args_parser = argparse.ArgumentParser(description="A python script to view CSV OR EXCEL files")
     args_parser.add_argument(
-        "--lib",
+        "--path",
         type=str,
         required=True,
-        help="path for sql file, like 'E:\\tmp\\alternative.db'",
-    )
-    args_parser.add_argument(
-        "--table",
-        type=str,
-        required=True,
-        help="table name in the sql file, like 'macro' or 'forex' in alternative.db",
+        help="path for csv file, like 'E:\\tmp\\test.csv.gz' or 'test.csv'",
     )
     args_parser.add_argument(
         "--vars",
@@ -26,14 +19,6 @@ def parse_args():
         help="variables to fetch, separated by ',' like \"open,high,low,close\", "
         "if not provided then fetch all.",
     )
-    args_parser.add_argument(
-        "--where",
-        type=str,
-        default=None,
-        help="conditions to filter, sql expression "
-        "like \"(instrument = 'a' OR instrument = 'd') AND (trade_date <= '20120131')\" ",
-    )
-
     args_parser.add_argument(
         "--head", type=int, default=0, help="integer, head lines to print"
     )
@@ -52,27 +37,21 @@ def parse_args():
         default=0,
         help="integer, provide larger value to see more columns when print outcomes",
     )
+    args_parser.add_argument(
+        "--where",
+        type=str,
+        default=None,
+        help="conditions to filter, accepted by pandas.query "
+        "like \"(instrument = 'a' | instrument = 'd') & (trade_date <= '20120131')\" ",
+    )
+    args_parser.add_argument(
+        "--header",
+        type=int,
+        default=0,
+        help="row number of headers, use -1 if there is no header in the source file"
+    )
     _args = args_parser.parse_args()
     return _args
-
-
-def get_table_names(lib: str, table: str) -> list[str]:
-    with sql3.connect(lib) as connection:
-        cursor = connection.cursor()
-        sql = f"select * from {table} where 1=0;"
-        cursor.execute(sql)
-        _names = [d[0] for d in cursor.description]
-    return _names
-
-
-def fetch(lib: str, table: str, names: list[str], conds: str) -> pd.DataFrame:
-    var_str = ",".join(names)
-    with sql3.connect(lib) as connection:
-        cursor = connection.cursor()
-        cmd_sql = f"SELECT {var_str} from {table} {f'WHERE {conds}' if conds else ''}"
-        data = cursor.execute(cmd_sql).fetchall()
-        _df = pd.DataFrame(data, columns=names)
-    return _df
 
 
 if __name__ == "__main__":
@@ -86,10 +65,16 @@ if __name__ == "__main__":
     if args.maxcols > 0:
         pd.set_option("display.max_columns", args.maxcols)
 
-    col_names = (
-        args.vars.split(",") if args.vars else get_table_names(args.lib, args.table)
-    )
-    df = fetch(args.lib, args.table, col_names, args.where)
+    col_names = args.vars.split(",") if args.vars else []
+    if args.path.endswith(".xls") or args.path.endswith(".xlsx"):
+        df = pd.read_excel(args.path, header=args.header if args.header >= 0 else None)
+    else:
+        df = pd.read_csv(args.path, header=args.header if args.header >= 0 else None)
+    if args.where:
+        df = df.query(args.where)
+    if col_names:
+        df = df[col_names]
+
     if args.head > 0:
         print(df.head(args.head))
         sys.exit()
