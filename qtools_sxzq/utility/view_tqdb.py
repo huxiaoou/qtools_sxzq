@@ -61,6 +61,12 @@ def parse_args():
         default=0,
         help="integer, provide larger value to see more columns when print outcomes",
     )
+    args_parser.add_argument(
+        "--save",
+        type=str,
+        default=None,
+        help="path for saving to a csv file",
+    )
     _args = args_parser.parse_args()
     return _args
 
@@ -99,6 +105,10 @@ def main():
         if args.tail > 0:
             print(f"{'tail':-^120s}")
             print(df.tail(args.tail))
+
+    if args.save:
+        df.to_csv(args.save, index=False)
+        print(f"data saved to {SFG(args.save)}")
     return 0
 
 
