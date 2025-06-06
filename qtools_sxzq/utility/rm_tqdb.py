@@ -34,8 +34,11 @@ def main():
     lib_name, table_name = args.lib, args.table
     if table_name:
         db = Database(lib_name)
-        db.truncate_table(table_name)  # clear table
-        db.delete_table(table_name)  # delete table
+        try:
+            db.truncate_table(table_name)  # clear table
+            db.delete_table(table_name)  # delete table
+        except ConnectionError:
+            print(f"Connection error for table {SFY(table_name)}, file does not exist, it may have been removed.")
     elif args.recursive:
         db = Database(lib_name)
         tabs = db.show_tables()
@@ -47,7 +50,8 @@ def main():
                     db.truncate_table(tab)
                     db.delete_table(tab)
                 except ConnectionError:
-                    print(f"skip {i:>3d} {tab}, file has been removed.")
+                    print(f"Connection error for table {SFY(tab)}, file does not exist, it may have been removed.")
+
 
         else:
             print(f"{SFG(lib_name)} has no tables")
