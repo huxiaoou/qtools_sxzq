@@ -121,6 +121,31 @@ class COptimizerPortfolioUtility(_COptimizerScipyMinimize):
         return res
 
 
+class COptimizerPortfolioUtilityRiskCtrl(COptimizerPortfolioUtility):
+    def __init__(self, risk_exposure: np.ndarray, sig: np.ndarray, **kwargs):
+        super().__init__(**kwargs)
+        self.risk_exposure = risk_exposure
+        self.sig = sig
+        self.fh = self.risk_exposure @ self.sig
+
+    @COptimizerPortfolio.parse_res
+    def optimize(self) -> OptimizeResult:
+        lb, ub = self.tot_mkt_val_bds
+        cons1 = NonlinearConstraint(lambda z: np.sum(np.abs(z)), lb=lb, ub=ub)
+        cons2 = NonlinearConstraint(lambda z: (self.fh @ z) @ (self.fh @ z), lb=0, ub=1e-2 * self.fh.shape[0])
+
+        # noinspection PyTypeChecker
+        res = minimize(
+            fun=self.target,
+            x0=self.x0,
+            bounds=self.bounds,
+            constraints=[cons1, cons2],
+            options={"maxiter": self.max_iter},
+            tol=self.tol,
+        )
+        return res
+
+
 class COptimizerPortfolioSharpe(_COptimizerScipyMinimize):
     def __init__(
             self,
