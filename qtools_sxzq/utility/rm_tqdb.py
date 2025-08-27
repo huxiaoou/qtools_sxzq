@@ -8,9 +8,7 @@ from qtools_sxzq.qwidgets import SFG, SFY
 def parse_args():
     args_parser = argparse.ArgumentParser(description="A python script to remove trans-quant database")
     args_parser.add_argument(
-        "--lib",
-        type=str,
-        required=True,
+        "lib", type=str,
         help="path for trans-quant database, like 'huxiaoou_private' or 'meta_data'",
     )
     args_parser.add_argument(
@@ -29,16 +27,21 @@ def parse_args():
     return _args
 
 
+def rm_tab_from_db(db, table_name: str):
+    try:
+        db.truncate_table(table_name)  # clear table
+        db.delete_table(table_name)  # delete table
+    except ConnectionError:
+        print(f"Connection error for table {SFY(table_name)}, file does not exist, it may have been removed.")
+    return
+
+
 def main():
     args = parse_args()
     lib_name, table_name = args.lib, args.table
     if table_name:
         db = Database(lib_name)
-        try:
-            db.truncate_table(table_name)  # clear table
-            db.delete_table(table_name)  # delete table
-        except ConnectionError:
-            print(f"Connection error for table {SFY(table_name)}, file does not exist, it may have been removed.")
+        rm_tab_from_db(db, table_name)
     elif args.recursive:
         db = Database(lib_name)
         tabs = db.show_tables()
@@ -46,13 +49,7 @@ def main():
             for i, tab in enumerate(tabs):
                 print(f"removing {i:>3d} {SFY(tab)}")
                 # re.match(pattern=r".*_mapping_\d{13}_\d{2}$", string=tab):
-                try:
-                    db.truncate_table(tab)
-                    db.delete_table(tab)
-                except ConnectionError:
-                    print(f"Connection error for table {SFY(tab)}, file does not exist, it may have been removed.")
-
-
+                rm_tab_from_db(db, tab)
         else:
             print(f"{SFG(lib_name)} has no tables")
     else:
