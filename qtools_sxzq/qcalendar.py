@@ -22,6 +22,9 @@ class CCalendar(object):
     def trade_dates(self) -> list[str]:
         return self.__trade_dates
 
+    def is_trade_date(self, d: str) -> bool:
+        return d in self.__trade_dates
+
     def get_iter_list(self, bgn_date: str, stp_date: str, ascending: bool = True) -> list[str]:
         res = []
         for t_date in self.__trade_dates:
