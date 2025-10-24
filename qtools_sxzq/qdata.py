@@ -34,13 +34,14 @@ class CMarketDescriptor:
     ini_cash: float
     fee_rate: float
     account: str  # "detail"
-    settle_price_table: list[str]  # [lib_name, table_name], like ["meta_data", "future_bar_1day"]
+    settle_price_table: tuple[str, str] = ("meta_data", "future_bar_1day")  # (lib_name, table_name)
     settle_price_field: str = "settle"  # name of price to used as settle, usually = "settle"
     open_field: str = "open"
     close_field: str = "close"
     multiplier_field: str = "multiplier"
     limit_up_field: str = "limit_up"
     limit_down_field: str = "limit_down"
+    dominant_contract_table: tuple[str, str] = ("meta_data", "future_dominant")  # (lib_name, table_name)
 
     def to_dict(self) -> dict:
         return {
@@ -50,7 +51,7 @@ class CMarketDescriptor:
             "fee_rate": self.fee_rate,
             "account": self.account,
             "account_info": {
-                "settle_price_table": self.settle_price_table,
+                "settle_price_table": list(self.settle_price_table),
                 "settle_price_table_fields": {
                     "settle_price_field": self.settle_price_field,
                     "open_field": self.open_field,
@@ -59,6 +60,7 @@ class CMarketDescriptor:
                     "limit_up_field": self.limit_up_field,
                     "limit_down_field": self.limit_down_field,
                 },
+                "dominant_contract_table": list(self.dominant_contract_table),
             },
         }
 
