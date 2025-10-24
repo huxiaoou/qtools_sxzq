@@ -20,7 +20,7 @@ class CDataDescriptor:
             self.codes,
             ",".join(self.fields),
             self.lag,
-            self.data_view_type
+            self.data_view_type,
         ]
 
     def set_lag(self, lag: int) -> NoReturn:
@@ -35,7 +35,12 @@ class CMarketDescriptor:
     fee_rate: float
     account: str  # "detail"
     settle_price_table: list[str]  # [lib_name, table_name], like ["meta_data", "future_bar_1day"]
-    settle_price_field: str  # name of price to used as settle, usually = "settle"
+    settle_price_field: str = "settle"  # name of price to used as settle, usually = "settle"
+    open_field: str = "open"
+    close_field: str = "close"
+    multiplier_field: str = "multiplier"
+    limit_up_field: str = "limit_up"
+    limit_down_field: str = "limit_down"
 
     def to_dict(self) -> dict:
         return {
@@ -46,8 +51,15 @@ class CMarketDescriptor:
             "account": self.account,
             "account_info": {
                 "settle_price_table": self.settle_price_table,
-                "settle_price_field": self.settle_price_field,
-            }
+                "settle_price_table_fields": {
+                    "settle_price_field": self.settle_price_field,
+                    "open_field": self.open_field,
+                    "close_field": self.close_field,
+                    "multiplier_field": self.multiplier_field,
+                    "limit_up_field": self.limit_up_field,
+                    "limit_down_field": self.limit_down_field,
+                },
+            },
         }
 
 
@@ -68,11 +80,11 @@ def save_df_to_db(df: pd.DataFrame, db_name: str, table_name: str):
 
 
 def save_data3d_to_db_with_key_as_code(
-        data_3d: dict[str, Union[pd.DataFrame, DataView2d]],
-        db_name: str,
-        table_name: str,
-        using_index_as_datetime: bool = True,
-        datetime_name: str = "datetime",
+    data_3d: dict[str, Union[pd.DataFrame, DataView2d]],
+    db_name: str,
+    table_name: str,
+    using_index_as_datetime: bool = True,
+    datetime_name: str = "datetime",
 ):
     """
 
