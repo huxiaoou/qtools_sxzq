@@ -29,12 +29,12 @@ class CDataDescriptor:
 
 @dataclass
 class CMarketDescriptor:
-    data: list[str]  # [lib_name, table_name]
     matcher: str  # daily
     ini_cash: float
     fee_rate: float
     account: str  # "detail"
-    settle_price_table: tuple[str, str] = ("meta_data", "future_bar_1day")  # (lib_name, table_name)
+    data: tuple[str, str] = ("meta_data", "future_bar_1day_aft")  # (lib_name, table_name)
+    settle_price_table: tuple[str, str] = ("meta_data", "future_bar_1day_aft")  # (lib_name, table_name)
     settle_price_field: str = "settle"  # name of price to used as settle, usually = "settle"
     open_field: str = "open"
     close_field: str = "close"
@@ -45,7 +45,7 @@ class CMarketDescriptor:
 
     def to_dict(self) -> dict:
         return {
-            "data": self.data,
+            "data": list(self.data),
             "matcher": self.matcher,
             "ini_cash": self.ini_cash,
             "fee_rate": self.fee_rate,
