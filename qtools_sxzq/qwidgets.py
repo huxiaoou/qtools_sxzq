@@ -1,4 +1,5 @@
 import re
+import os
 import datetime as dt
 from typing import Union
 
@@ -21,3 +22,23 @@ SFW = SetFontColor(c="0;37;40")  # White
 
 def parse_instrument_from_contract(contract_id: str) -> str:
     return re.sub(pattern="[0-9]", repl="", string=contract_id)
+
+
+def check_and_mkdir(dir_path: str, verbose: bool = False):
+    try:
+        os.mkdir(dir_path)
+    except FileExistsError:
+        pass
+    if verbose:
+        print(f"[INF] Making directory {SFG(dir_path)}")
+    return 0
+
+
+def check_and_makedirs(dir_path: str, verbose: bool = False):
+    try:
+        os.makedirs(dir_path)
+    except FileExistsError:
+        pass
+    if verbose:
+        print(f"[INF] Making directory {SFG(dir_path)}")
+    return 0
