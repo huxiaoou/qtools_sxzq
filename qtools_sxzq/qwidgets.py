@@ -1,11 +1,11 @@
 import re
 import os
 import datetime as dt
-from typing import Union
+from typing import Union, Any
 
 
 def SetFontColor(c):
-    def inner(s: Union[str, int, float, dt.datetime]):
+    def inner(s: Union[str, int, float, dt.datetime, Any]):
         return f"\033[{c}m{s}\033[0m"
 
     return inner
