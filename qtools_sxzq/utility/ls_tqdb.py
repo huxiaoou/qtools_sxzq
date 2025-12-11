@@ -9,11 +9,14 @@ from qtools_sxzq.qdataviewer import get_tqdb_tables
 def parse_args():
     args_parser = argparse.ArgumentParser(description="A python script to list trans-quant database")
     args_parser.add_argument(
-        "lib", type=str,
+        "lib",
+        type=str,
         help="path for trans-quant database, like 'huxiaoou_private' or 'meta_data'",
     )
     args_parser.add_argument(
-        "--pattern", type=str, default="",
+        "--pattern",
+        type=str,
+        default="",
         help="regex expression to filter table names, like 'gamma'",
     )
     _args = args_parser.parse_args()

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import re
 from transmatrix.data_api import Database
 from qtools_sxzq.qwidgets import SFG, SFY
 
@@ -8,7 +9,8 @@ from qtools_sxzq.qwidgets import SFG, SFY
 def parse_args():
     args_parser = argparse.ArgumentParser(description="A python script to remove trans-quant database")
     args_parser.add_argument(
-        "lib", type=str,
+        "lib",
+        type=str,
         help="path for trans-quant database, like 'huxiaoou_private' or 'meta_data'",
     )
     args_parser.add_argument(
@@ -18,10 +20,17 @@ def parse_args():
         help="table name in the database, like 'table_avlb' or 'future_bar_1day'",
     )
     args_parser.add_argument(
-        "-r", "--recursive",
+        "-r",
+        "--recursive",
         default=False,
         action="store_true",
         help="if argument --table is not provided, this one must be provided to the whole database",
+    )
+    args_parser.add_argument(
+        "--pattern",
+        type=str,
+        default="",
+        help="regex expression to filter table names, like 'gamma'",
     )
     _args = args_parser.parse_args()
     return _args
@@ -40,11 +49,20 @@ def main():
     args = parse_args()
     lib_name, table_name = args.lib, args.table
     if table_name:
-        db = Database(lib_name)
-        rm_tab_from_db(db, table_name)
+        if args.pattern:
+            if re.search(args.pattern, table_name) is not None:
+                db = Database(lib_name)
+                rm_tab_from_db(db, table_name)
+            else:
+                print(f"{SFG(table_name)} is not a table with name match pattern = '{args.pattern}'")
+        else:
+            db = Database(lib_name)
+            rm_tab_from_db(db, table_name)
     elif args.recursive:
         db = Database(lib_name)
         tabs = db.show_tables()
+        if args.pattern:
+            tabs = [tab for tab in tabs if re.search(args.pattern, tab) is not None]
         if tabs:
             for i, tab in enumerate(tabs):
                 print(f"removing {i:>3d} {SFY(tab)}")
