@@ -103,9 +103,9 @@ class CPlot(object):
         if ylim != (None, None):
             y_range = ylim[1] - ylim[0]
             if ytick_spread:
-                yticks = np.arange(ylim[0], ylim[1], int(ytick_spread))
+                yticks = np.arange(ylim[0], ylim[1], ytick_spread)
             elif ytick_count:
-                yticks = np.arange(ylim[0], ylim[1], int(y_range / ytick_count))
+                yticks = np.arange(ylim[0], ylim[1], y_range / ytick_count)
             else:
                 yticks = None
             if yticks is not None:
