@@ -53,23 +53,23 @@ class CPlot(object):
         return 0
 
     def set_axis_x(
-            self,
-            xlim: tuple = (None, None),
-            xtick_spread: float = None,
-            xtick_count: int = 10,
-            xlabel: str = None,
-            xlabel_size: int = 12,
-            xtick_label_size: int = 12,
-            xtick_label_rotation: int = 0,
-            xtick_direction: str = "in",
-            xgrid_visible: bool = False,
+        self,
+        xlim: tuple = (None, None),
+        xtick_spread: float = None,
+        xtick_count: int = 10,
+        xlabel: str = None,
+        xlabel_size: int = 12,
+        xtick_label_size: int = 12,
+        xtick_label_rotation: int = 0,
+        xtick_direction: str = "in",
+        xgrid_visible: bool = False,
     ):
         if xlim != (None, None):
             x_range = xlim[1] - xlim[0]
             if xtick_spread:
-                xticks = np.arange(xlim[0], xlim[1], xtick_spread)
+                xticks = np.arange(xlim[0], xlim[1], int(xtick_spread))
             elif xtick_count:
-                xticks = np.arange(xlim[0], xlim[1], x_range / xtick_count)
+                xticks = np.arange(xlim[0], xlim[1], int(x_range / xtick_count))
             else:
                 xticks = None
             if xticks is not None:
@@ -89,23 +89,23 @@ class CPlot(object):
         return 0
 
     def set_axis_y(
-            self,
-            ylim: tuple = (None, None),
-            ytick_spread: float = None,
-            ytick_count: int = 10,
-            ylabel: str = None,
-            ylabel_size: int = 12,
-            ytick_label_size: int = 12,
-            ytick_label_rotation: int = 0,
-            ytick_direction: str = "in",
-            ygrid_visible: bool = False,
+        self,
+        ylim: tuple = (None, None),
+        ytick_spread: float = None,
+        ytick_count: int = 10,
+        ylabel: str = None,
+        ylabel_size: int = 12,
+        ytick_label_size: int = 12,
+        ytick_label_rotation: int = 0,
+        ytick_direction: str = "in",
+        ygrid_visible: bool = False,
     ):
         if ylim != (None, None):
             y_range = ylim[1] - ylim[0]
             if ytick_spread:
-                yticks = np.arange(ylim[0], ylim[1], ytick_spread)
+                yticks = np.arange(ylim[0], ylim[1], int(ytick_spread))
             elif ytick_count:
-                yticks = np.arange(ylim[0], ylim[1], y_range / ytick_count)
+                yticks = np.arange(ylim[0], ylim[1], int(y_range / ytick_count))
             else:
                 yticks = None
             if yticks is not None:
@@ -144,11 +144,11 @@ class CPlot(object):
 
 class CPlotFromDataFrame(CPlot):
     def __init__(
-            self,
-            plot_data: pd.DataFrame,
-            fig_size: tuple[float, float] = (16, 9),
-            style: str = "seaborn-v0_8-poster",
-            colormap: str = None,
+        self,
+        plot_data: pd.DataFrame,
+        fig_size: tuple[float, float] = (16, 9),
+        style: str = "seaborn-v0_8-poster",
+        colormap: str = None,
     ):
         """
 
@@ -161,18 +161,18 @@ class CPlotFromDataFrame(CPlot):
         super().__init__(fig_size=fig_size, style=style)
 
     def set_axis_x(
-            self,
-            xlim: tuple = (None, None),
-            xtick_spread: float = None,
-            xtick_count: int = 10,
-            xlabel: str = None,
-            xlabel_size: int = 12,
-            xtick_label_size: int = 12,
-            xtick_label_rotation: int = 0,
-            xtick_direction: str = "in",
-            xgrid_visible: bool = False,
-            update_xticklabels: bool = True,
-            using_index_as_x: bool = True,
+        self,
+        xlim: tuple = (None, None),
+        xtick_spread: float = None,
+        xtick_count: int = 10,
+        xlabel: str = None,
+        xlabel_size: int = 12,
+        xtick_label_size: int = 12,
+        xtick_label_rotation: int = 0,
+        xtick_direction: str = "in",
+        xgrid_visible: bool = False,
+        update_xticklabels: bool = True,
+        using_index_as_x: bool = True,
     ):
         other_kwargs = {
             "xtick_spread": xtick_spread,
@@ -197,18 +197,18 @@ class CPlotFromDataFrame(CPlot):
         return 0
 
     def set_axis_y(
-            self,
-            ylim: tuple = (None, None),
-            ytick_spread: float = None,
-            ytick_count: int = 10,
-            ylabel: str = None,
-            ylabel_size: int = 12,
-            ytick_label_size: int = 12,
-            ytick_label_rotation: int = 0,
-            ytick_direction: str = "in",
-            ygrid_visible: bool = False,
-            update_yticklabels: bool = True,
-            using_columns_as_y: bool = True,
+        self,
+        ylim: tuple = (None, None),
+        ytick_spread: float = None,
+        ytick_count: int = 10,
+        ylabel: str = None,
+        ylabel_size: int = 12,
+        ytick_label_size: int = 12,
+        ytick_label_rotation: int = 0,
+        ytick_direction: str = "in",
+        ygrid_visible: bool = False,
+        update_yticklabels: bool = True,
+        using_columns_as_y: bool = True,
     ):
         other_kwargs = {
             "ytick_spread": ytick_spread,
@@ -248,14 +248,14 @@ class CPlotFromDataFrame(CPlot):
 
 class CPlotLines(CPlotFromDataFrame):
     def __init__(
-            self,
-            plot_data: pd.DataFrame,
-            fig_size: tuple[float, float] = (16, 9),
-            style: str = "seaborn-v0_8-poster",
-            colormap: str = None,
-            line_width: float = 2,
-            line_style: list = None,
-            line_color: list = None,
+        self,
+        plot_data: pd.DataFrame,
+        fig_size: tuple[float, float] = (16, 9),
+        style: str = "seaborn-v0_8-poster",
+        colormap: str = None,
+        line_width: float = 2,
+        line_style: list = None,
+        line_color: list = None,
     ):
         """
 
@@ -333,13 +333,15 @@ class CPlotLines(CPlotFromDataFrame):
 
 
 class CPlotBars(CPlotFromDataFrame):
-    def __init__(self,
-                 bar_color: list = None,
-                 bar_width: float = 0.8,
-                 bar_alpha: float = 1.0,
-                 stacked: bool = False,
-                 align: str = "edge",
-                 **kwargs):
+    def __init__(
+        self,
+        bar_color: list = None,
+        bar_width: float = 0.8,
+        bar_alpha: float = 1.0,
+        stacked: bool = False,
+        align: str = "edge",
+        **kwargs,
+    ):
         """
 
         :param bar_color:
